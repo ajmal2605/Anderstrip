@@ -1,0 +1,18 @@
+{
+  "name": "express-js",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start:dev": "node ./bin/www -e development"
+  },
+  "dependencies": {
+    "@duffel/api": "^1.9.4",
+    "command-line-args": "^5.2.1",
+    "cookie-parser": "~1.4.4",
+    "debug": "~2.6.9",
+    "dotenv": "^15.0.0",
+    "express": "~4.17.3",
+    "http-errors": "~1.6.3",
+    "morgan": "~1.9.1"
+  }
+}
