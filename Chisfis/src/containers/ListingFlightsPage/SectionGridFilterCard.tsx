@@ -5,16 +5,16 @@ import FlightCard, { FlightCardProps } from "components/FlightCard/FlightCard";
 import ButtonPrimary from "shared/Button/ButtonPrimary";
 import { Resource } from "types";
 import { Offer, Order } from '@duffel/api';
-import { SearchCard } from "./SearchCard";
-import { BookingCard } from "./BookingCard";
-import { ConfirmationCard } from "./ConfirmationCard";
-import fetchOffers from "components/HeroSearchForm/(flight-search-form)/FlightSearchForm"
 import { GENERIC_ERROR_MESSAGE } from "./constants";
+import { FlightSearchFormData } from "components/HeroSearchForm/(flight-search-form)/FlightSearchForm";
+
 export interface SectionGridFilterCardProps {
   className?: string;
   beforeSearch(): void;
   onSuccess(offer: Offer): void;
   onError(e: Error): void;
+  flyingFrom:string;
+  flyingTo:string;
 }
 
 const ErrorDisplay: React.FC<{ error: Error }> = ({ error }) => (
@@ -79,17 +79,20 @@ const DEMO_DATA: FlightCardProps["data"][] = [
   },
 ];
 
+
 const SectionGridFilterCard: FC<SectionGridFilterCardProps> = ({
   className = "",
   beforeSearch,
   onSuccess,
   onError,
+  flyingFrom,
+  flyingTo
 }) => {
   const [sort, setSort] = useState<'total_amount' | 'total_duration'>(
     'total_duration'
   );
-  const [origin, setOrigin] = useState('JFK');
-  const [destination, setDestination] = useState('LHR');
+  const [origin, setOrigin] = useState(flyingFrom);
+  const [destination, setDestination] = useState(flyingTo);
   const [isFetching, setIsFetching] = useState(false);
   const [offer, setOffer] = useState<Resource<Offer>>(null);
   const [order, setOrder] = useState<Resource<Order>>(null);

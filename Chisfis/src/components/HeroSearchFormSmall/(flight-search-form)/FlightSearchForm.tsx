@@ -1,5 +1,6 @@
 import React, { FC, useState } from "react";
 import LocationInput from "../LocationInput";
+import { LocationInputProps } from "../LocationInput";
 import { Transition } from "@headlessui/react";
 import { ChevronDownIcon } from "@heroicons/react/24/solid";
 import { Fragment } from "react";
@@ -7,6 +8,7 @@ import FlightDateRangeInput from "./FlightDateRangeInput";
 import { GuestsObject } from "components/HeroSearchForm/type";
 import NcInputNumber from "components/NcInputNumber/NcInputNumber";
 import useOutsideAlerter from "hooks/useOutsideAlerter";
+import { Value } from "sass";
 
 export interface FlightSearchFormProps {}
 
@@ -26,6 +28,9 @@ const flightClass = [
 ];
 
 const FlightSearchForm: FC<FlightSearchFormProps> = () => {
+  const [flyingFrom, setFlyingFrom] = useState("");
+  const [flyingTo, setFlyingTo] = useState("");
+  
   const [dropOffLocationType, setDropOffLocationType] = useState<
     "roundTrip" | "oneWay" | ""
   >("roundTrip");
@@ -42,6 +47,16 @@ const FlightSearchForm: FC<FlightSearchFormProps> = () => {
   useOutsideAlerter(refGuestContainer, () => setOpenGuest(false));
   useOutsideAlerter(refClassContainer, () => setOpenClass(false));
   //
+  const handleFromInputDone:LocationInputProps["onInputDone"] = (
+    value:string
+  ) =>{
+    setFlyingFrom(value);
+  }
+  const handleToInputDone:LocationInputProps["onInputDone"] = (
+    value:string
+  ) =>{
+    setFlyingTo(value);
+  }
 
   const handleChangeData = (value: number, type: keyof GuestsObject) => {
     let newValue = {
@@ -227,6 +242,7 @@ const FlightSearchForm: FC<FlightSearchFormProps> = () => {
             placeHolder="Flying from"
             desc="Where do you want to fly from?"
             className="flex-1"
+            onInputDone={handleFromInputDone}
           />
           <div className="self-center border-r border-slate-200 dark:border-slate-700 h-8"></div>
           <LocationInput
@@ -234,6 +250,7 @@ const FlightSearchForm: FC<FlightSearchFormProps> = () => {
             desc="Where you want to fly to?"
             className="flex-1"
             divHideVerticalLineClass=" -inset-x-0.5"
+            onInputDone={handleToInputDone}
           />
           <div className="self-center border-r border-slate-200 dark:border-slate-700 h-8"></div>
           <FlightDateRangeInput

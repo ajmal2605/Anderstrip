@@ -8,6 +8,7 @@ import SectionGridFilterCard from "./SectionGridFilterCard";
 import { Helmet } from "react-helmet";
 import { Resource } from "types";
 import { Offer,Order } from "@duffel/api";
+import FlightSearchForm, { FlightSearchFormData, FlightSearchFormProps } from "components/HeroSearchForm/(flight-search-form)/FlightSearchForm";
 
 
 export interface ListingFlightsPageProps {
@@ -72,6 +73,7 @@ const ListingFlightsPage: FC<ListingFlightsPageProps> = ({
 }) => {
   const [offer, setOffer] = useState<Resource<Offer>>(null);
   const [order, setOrder] = useState<Resource<Order>>(null);
+  
   return (
     <div
       className={`nc-ListingFlightsPage relative overflow-hidden ${className}`}
@@ -101,6 +103,8 @@ const ListingFlightsPage: FC<ListingFlightsPageProps> = ({
         beforeSearch={() => setOrder(null)}
         onSuccess={(offer) => setOffer(offer)}
         onError={(e) => setOffer(e)}
+        flyingFrom = ""
+        flyingTo=""
         />
 
         {/* SECTION 1 */}

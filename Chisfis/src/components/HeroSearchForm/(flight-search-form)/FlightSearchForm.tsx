@@ -1,5 +1,6 @@
 import React, { FC, useState } from "react";
 import LocationInput from "../LocationInput";
+import { LocationInputProps } from "../LocationInput";
 import { Popover, Transition } from "@headlessui/react";
 import { ChevronDownIcon } from "@heroicons/react/24/solid";
 import { Fragment } from "react";
@@ -7,7 +8,6 @@ import FlightDateRangeInput from "./FlightDateRangeInput";
 import { GuestsObject } from "../type";
 import NcInputNumber from "components/NcInputNumber/NcInputNumber";
 import { Offer } from '@duffel/api';
-import { GENERIC_ERROR_MESSAGE } from "containers/ListingFlightsPage/constants";
 
 
 export interface FlightSearchFormProps {
@@ -33,17 +33,22 @@ const flightClass = [
 
 export type TypeDropOffLocationType = "roundTrip" | "oneWay" | "";
 
+export interface FlightSearchFormData {
+  flyingFrom: string;
+  flyingTo: string;
+  dropOffLocationType: TypeDropOffLocationType;
+  flightClassState: string;
+  guestAdultsInputValue: number;
+  guestChildrenInputValue: number;
+  guestInfantsInputValue: number;
+}
+
+
 const FlightSearchForm: FC<FlightSearchFormProps> = ({
-  beforeSearch,
-  onSuccess,
-  onError,
 }) => {
-  const [sort, setSort] = useState<'total_amount' | 'total_duration'>(
-    'total_duration'
-  );
-  const [origin, setOrigin] = useState('JFK');
-  const [destination, setDestination] = useState('LHR');
-  const [isFetching, setIsFetching] = useState(false);
+  
+  const [flyingFrom, setFlyingFrom] = useState("");
+  const [flyingTo, setFlyingTo] = useState("");
   const [dropOffLocationType, setDropOffLocationType] =
     useState<TypeDropOffLocationType>("roundTrip");
   const [flightClassState, setFlightClassState] = useState("Economy");
@@ -52,47 +57,16 @@ const FlightSearchForm: FC<FlightSearchFormProps> = ({
   const [guestChildrenInputValue, setGuestChildrenInputValue] = useState(1);
   const [guestInfantsInputValue, setGuestInfantsInputValue] = useState(1);
 
-  const fetchOffers = async () => {
-    beforeSearch();
-    setIsFetching(true);
-
-    try {
-      const res = await fetch('/api/search', {
-        method: 'post',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          origin,
-          destination,
-          sort,
-        }),
-      });
-
-      const { offer, errors } = await res.json();
-
-      if (errors) {
-        onError(
-          new Error(
-            Array.isArray(errors) ? errors[0].title : GENERIC_ERROR_MESSAGE
-          )
-        );
-        return;
-      }
-
-      if (!offer) {
-        onError(new Error(GENERIC_ERROR_MESSAGE));
-        return;
-      }
-
-      onSuccess(offer);
-    } catch (e) {
-      onError(e instanceof Error ? e : new Error(GENERIC_ERROR_MESSAGE));
-    }
-
-    setIsFetching(false);
-  };
-
+  const handleFromInputDone:LocationInputProps["onInputDone"] = (
+    value:string
+  ) =>{
+    setFlyingFrom(value);
+  }
+  const handleToInputDone:LocationInputProps["onInputDone"] = (
+    value:string
+  ) =>{
+    setFlyingTo(value);
+  }
   const handleChangeData = (value: number, type: keyof GuestsObject) => {
     let newValue = {
       guestAdults: guestAdultsInputValue,
@@ -280,6 +254,7 @@ const FlightSearchForm: FC<FlightSearchFormProps> = ({
             placeHolder="Flying from"
             desc="Where do you want to fly from?"
             className="flex-1"
+            onInputDone={handleFromInputDone}
           />
           <div className="self-center border-r border-slate-200 dark:border-slate-700 h-8"></div>
           <LocationInput
@@ -287,6 +262,7 @@ const FlightSearchForm: FC<FlightSearchFormProps> = ({
             desc="Where you want to fly to?"
             className="flex-1"
             divHideVerticalLineClass=" -inset-x-0.5"
+            onInputDone={handleToInputDone}
           />
           <div className="self-center border-r border-slate-200 dark:border-slate-700 h-8"></div>
           <FlightDateRangeInput
@@ -301,5 +277,4 @@ const FlightSearchForm: FC<FlightSearchFormProps> = ({
 
   return renderForm();
 };
-
 export default FlightSearchForm;

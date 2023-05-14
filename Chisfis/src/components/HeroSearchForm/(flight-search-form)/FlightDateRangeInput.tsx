@@ -9,8 +9,8 @@ import ClearDataButton from "../ClearDataButton";
 import ButtonSubmit from "../ButtonSubmit";
 import DatePickerCustomHeaderTwoMonth from "components/DatePickerCustomHeaderTwoMonth";
 import DatePickerCustomDay from "components/DatePickerCustomDay";
-import FlightSearchForm, { FlightSearchFormProps } from "./FlightSearchForm";
-import fetchOffers from "./FlightSearchForm";
+
+
 
 export interface FlightDateRangeInputProps {
   className?: string;
@@ -35,9 +35,6 @@ const FlightDateRangeInput: FC<FlightDateRangeInputProps> = ({
     setStartDate(start);
     setEndDate(end);
   };
-  const getOffers = () =>{
-    const offers = fetchOffers;
-  }
   const renderInput = () => {
     return (
       <>

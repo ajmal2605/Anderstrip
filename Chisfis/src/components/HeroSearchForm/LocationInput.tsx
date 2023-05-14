@@ -5,6 +5,7 @@ import React, { useState, useRef, useEffect, FC } from "react";
 import ClearDataButton from "./ClearDataButton";
 
 export interface LocationInputProps {
+  onInputDone?: (value: string) => void;
   placeHolder?: string;
   desc?: string;
   className?: string;
@@ -14,6 +15,7 @@ export interface LocationInputProps {
 
 const LocationInput: FC<LocationInputProps> = ({
   autoFocus = false,
+  onInputDone,
   placeHolder = "Location",
   desc = "Where are you going?",
   className = "nc-flex-1.5",
@@ -58,6 +60,7 @@ const LocationInput: FC<LocationInputProps> = ({
 
   const handleSelectLocation = (item: string) => {
     setValue(item);
+    onInputDone && onInputDone(item);
     setShowPopover(false);
   };
 
